@@ -42,6 +42,8 @@ model Product {
   /// @description Number of reviews
   /// @minimum 9
   /// @example 12
+  /// @DtoApiCreateHidden
+  /// @DtoApiUpdateHidden
   reviewCount     Int         @default(0)
   type            ProductType
   /// @ArrayNotEmpty

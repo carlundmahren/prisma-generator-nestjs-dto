@@ -1,6 +1,10 @@
 import slash from 'slash';
 import path from 'node:path';
-import { DTO_ENTITY_HIDDEN, DTO_RELATION_INCLUDE_ID } from '../annotations';
+import {
+  DTO_ENTITY_HIDDEN,
+  DTO_RELATION_INCLUDE_ID,
+  DTO_API_PLAIN_HIDDEN,
+} from '../annotations';
 import { isAnnotatedWith, isRelation, isType } from '../field-classifiers';
 import {
   getRelationScalars,
@@ -43,6 +47,7 @@ export const computePlainDtoParams = ({
     const overrides: Partial<DMMF.Field> = {
       isRequired: true,
       isNullable: !field.isRequired,
+      plainApiHide: false,
     };
     const decorators: { apiProperties?: IApiProperty[] } = {};
 
@@ -93,6 +98,7 @@ export const computePlainDtoParams = ({
     }
 
     if (!templateHelpers.config.noDependencies) {
+      overrides.plainApiHide = isAnnotatedWith(field, DTO_API_PLAIN_HIDDEN);
       decorators.apiProperties = parseApiProperty(
         { ...field, isRequired: false, isNullable: !field.isRequired },
         { default: false },

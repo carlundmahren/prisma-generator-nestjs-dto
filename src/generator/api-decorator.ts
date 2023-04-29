@@ -146,7 +146,16 @@ export function parseApiProperty(
 /**
  * Compose `@ApiProperty()` decorator.
  */
-export function decorateApiProperty(field: ParsedField): string {
+export function decorateApiProperty(
+  field: ParsedField,
+  dtoType: 'create' | 'update' | 'plain' | null = null,
+): string {
+  if (dtoType) {
+    type ObjectKey = keyof typeof field;
+    const apiHide = (dtoType + 'ApiHide') as ObjectKey;
+    if (field[apiHide]) return '';
+  }
+
   if (
     field.apiProperties?.length === 1 &&
     field.apiProperties[0].name === 'dummy'

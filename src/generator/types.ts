@@ -23,6 +23,9 @@ export interface ParsedField {
   hasDefaultValue?: boolean;
   default?: any;
   apiProperties?: IApiProperty[];
+  createApiHide?: boolean;
+  updateApiHide?: boolean;
+  plainApiHide?: boolean;
   classValidators?: IClassValidator[];
   relationName?: string;
   relationFromFields?: string[];

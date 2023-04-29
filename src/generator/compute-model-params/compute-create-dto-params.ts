@@ -2,6 +2,7 @@ import slash from 'slash';
 import path from 'node:path';
 import {
   DTO_CREATE_OPTIONAL,
+  DTO_API_CREATE_HIDDEN,
   DTO_RELATION_CAN_CONNECT_ON_CREATE,
   DTO_RELATION_CAN_CREATE_ON_CREATE,
   DTO_RELATION_INCLUDE_ID,
@@ -63,7 +64,9 @@ export const computeCreateDtoParams = ({
 
   const fields = model.fields.reduce((result, field) => {
     const { name } = field;
-    const overrides: Partial<DMMF.Field> = {};
+    const overrides: Partial<DMMF.Field> = {
+      createApiHide: false,
+    };
     const decorators: {
       apiProperties?: IApiProperty[];
       classValidators?: IClassValidator[];
@@ -189,6 +192,7 @@ export const computeCreateDtoParams = ({
     }
 
     if (!templateHelpers.config.noDependencies) {
+      overrides.createApiHide = isAnnotatedWith(field, DTO_API_CREATE_HIDDEN);
       decorators.apiProperties = parseApiProperty(field, {
         type: !overrides.type,
       });

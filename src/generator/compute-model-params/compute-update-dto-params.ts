@@ -7,6 +7,7 @@ import {
   DTO_RELATION_MODIFIERS_ON_UPDATE,
   DTO_TYPE_FULL_UPDATE,
   DTO_UPDATE_HIDDEN,
+  DTO_API_UPDATE_HIDDEN,
   DTO_UPDATE_OPTIONAL,
 } from '../annotations';
 import {
@@ -67,6 +68,7 @@ export const computeUpdateDtoParams = ({
     const overrides: Partial<DMMF.Field> = {
       isRequired: false,
       isNullable: !field.isRequired,
+      updateApiHide: false,
     };
     const decorators: {
       apiProperties?: IApiProperty[];
@@ -190,6 +192,7 @@ export const computeUpdateDtoParams = ({
     }
 
     if (!templateHelpers.config.noDependencies) {
+      overrides.updateApiHide = isAnnotatedWith(field, DTO_API_UPDATE_HIDDEN);
       decorators.apiProperties = parseApiProperty(
         {
           ...field,

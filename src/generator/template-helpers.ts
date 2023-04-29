@@ -203,7 +203,7 @@ export const makeHelpers = ({
     useInputTypes = false,
     forceOptional = false,
   ) =>
-    `${decorateApiProperty(field)}${decorateClassValidators(field)}${
+    `${decorateApiProperty(field, dtoType)}${decorateClassValidators(field)}${
       field.name
     }${unless(
       field.isRequired && !forceOptional,
