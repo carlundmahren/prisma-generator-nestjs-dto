@@ -13,6 +13,7 @@ import { generatePlainDto } from './generate-plain-dto';
 import { DTO_IGNORE_MODEL } from './annotations';
 import { isAnnotatedWith } from './field-classifiers';
 import { NamingStyle, Model, WriteableFileSpecs } from './types';
+import pluralize from 'pluralize-esm';
 
 interface RunParam {
   output: string;
@@ -59,7 +60,9 @@ export const run = ({
     snake,
   };
 
-  const transformFileNameCase = transformers[fileNamingStyle];
+  const transformFileNameCase0 = transformers[fileNamingStyle];
+  const transformFileNameCase = (str: string) =>
+    pluralize(transformFileNameCase0(str));
 
   const templateHelpers = makeHelpers({
     transformFileNameCase,

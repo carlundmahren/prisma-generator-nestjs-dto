@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.17.5] - 2023-04-29
+
+- add annotation `@DtoApiCreateHidden`, `@DtoApiCreateHidden`
+- restore annotation `@DtoUpdateHidden`
+- output NestJs pluralized model folders.
+
 ## [1.17.4] - 2023-03-04
 
 - fix connect and create class names that get too many suffixes if `dtoSuffix` does not end with `dto` [#17][i17]
