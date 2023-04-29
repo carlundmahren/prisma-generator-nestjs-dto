@@ -19,7 +19,7 @@ generator nestjsDto {
   dtoSuffix                       = "Dto"
   entityPrefix                    = ""
   entitySuffix                    = "Entity"
-  fileNamingStyle                 = "camel"
+  fileNamingStyle                 = "kebab"
   classValidation                 = "true"
   noDependencies                  = "false"
   outputType                      = "class"

@@ -60,9 +60,9 @@ export const run = ({
     snake,
   };
 
-  const transformFileNameCase0 = transformers[fileNamingStyle];
-  const transformFileNameCase = (str: string) =>
-    pluralize(transformFileNameCase0(str));
+  const transformFileNameCase = transformers[fileNamingStyle];
+  const transformFileNameCases = (str: string) =>
+    pluralize(transformFileNameCase(str));
 
   const templateHelpers = makeHelpers({
     transformFileNameCase,
@@ -83,8 +83,8 @@ export const run = ({
       output: {
         dto: outputToNestJsResourceStructure
           ? flatResourceStructure
-            ? path.join(output, transformFileNameCase(model.name))
-            : path.join(output, transformFileNameCase(model.name), 'dto')
+            ? path.join(output, transformFileNameCases(model.name))
+            : path.join(output, transformFileNameCases(model.name), 'dto')
           : output,
         entity: '',
       },
@@ -100,13 +100,13 @@ export const run = ({
       output: {
         dto: outputToNestJsResourceStructure
           ? flatResourceStructure
-            ? path.join(output, transformFileNameCase(model.name))
-            : path.join(output, transformFileNameCase(model.name), 'dto')
+            ? path.join(output, transformFileNameCases(model.name))
+            : path.join(output, transformFileNameCases(model.name), 'dto')
           : output,
         entity: outputToNestJsResourceStructure
           ? flatResourceStructure
-            ? path.join(output, transformFileNameCase(model.name))
-            : path.join(output, transformFileNameCase(model.name), 'entities')
+            ? path.join(output, transformFileNameCases(model.name))
+            : path.join(output, transformFileNameCases(model.name), 'entities')
           : output,
       },
     }));
