@@ -148,6 +148,7 @@ export function parseApiProperty(
  */
 export function decorateApiProperty(
   field: ParsedField,
+  castType: string | undefined,
   dtoType: 'create' | 'update' | 'plain' | null = null,
 ): string {
   if (dtoType) {
@@ -156,11 +157,12 @@ export function decorateApiProperty(
     if (field[apiHide]) return '';
   }
 
+  castType = castType ? (castType = `type: ${castType},`) : '';
   if (
     field.apiProperties?.length === 1 &&
     field.apiProperties[0].name === 'dummy'
   ) {
-    return '@ApiProperty()\n';
+    return `@ApiProperty({${castType}})\n`;
   }
 
   let decorator = '';
@@ -175,7 +177,7 @@ export function decorateApiProperty(
           : encapsulateString(prop.value)
       },\n`;
     });
-    decorator += '})\n';
+    decorator += `${castType}})\n`;
   }
 
   return decorator;

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - add annotation `@DtoCreateHidden`
 - restore annotation `@DtoUpdateHidden`
 - output NestJs pluralized model folders.
+- add `@ApiProperty`.type for `@DtoCastType'
 
 ## [1.17.4] - 2023-03-04
 
