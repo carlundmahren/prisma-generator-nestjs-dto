@@ -157,12 +157,14 @@ export function decorateApiProperty(
     if (field[apiHide]) return '';
   }
 
-  castType = castType ? (castType = `type: ${castType},`) : '';
+  let required = `required: ${field.isRequired},\n`;
+
+  castType = castType ? (castType = `type: ${castType},\n`) : '';
   if (
     field.apiProperties?.length === 1 &&
     field.apiProperties[0].name === 'dummy'
   ) {
-    return `@ApiProperty({${castType}})\n`;
+    return `@ApiProperty({\n${castType}${required}})\n`;
   }
 
   let decorator = '';
@@ -171,13 +173,14 @@ export function decorateApiProperty(
     decorator += '@ApiProperty({\n';
     field.apiProperties.forEach((prop) => {
       if (prop.name === 'dummy') return;
+      if (prop.name === 'required') required = '';
       decorator += `  ${prop.name}: ${
         prop.name === 'enum' || prop.noEncapsulation
           ? prop.value
           : encapsulateString(prop.value)
       },\n`;
     });
-    decorator += `${castType}})\n`;
+    decorator += `${castType}${required}})\n`;
   }
 
   return decorator;
