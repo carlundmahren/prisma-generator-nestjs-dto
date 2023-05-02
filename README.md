@@ -114,6 +114,10 @@ model Post {
   - `@DtoCastType(MyType, some-package)` will cast the field as `MyType` and add `import {MyType} from "some-package"`
   - `@DtoCastType(MyType, ../types, default)` will cast and add `import MyType from "../types"`
   - `@DtoCastType(MyTypeInterface, ../types, MyType)` will cast as `MyTypeInterface` and add `import {MyType as MyTypeInterface} from "../types"`
+- `@CustomValidator` - add custom validator, with an `import`. For example:
+  - `@CustomValidator(MyValidator)` will generate a `@MyValidator()` on the field.
+  - `@CustomValidator(MyValidator, ../package/name)` will generate a `@MyValidator()` on the field, and `import MyValidator from "../package/name"`.
+  - `@CustomValidator(MyValidator, 'param1', 2, ../package/name)` will generate a `@MyValidator('param1', 2)` on the field, and `import MyValidator from "../package/name"`.
 
 ### Schema Object annotations
 

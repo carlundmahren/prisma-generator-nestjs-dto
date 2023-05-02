@@ -1,6 +1,7 @@
 import { DMMF } from '@prisma/generator-helper';
 import { IClassValidator, ParsedField } from './types';
-import { isRelation, isType } from './field-classifiers';
+import { isAnnotatedWith, isRelation, isType } from './field-classifiers';
+import { CUSTOM_VALIDATOR } from './annotations';
 
 const validatorsWithoutParams = [
   'IsEmpty',
@@ -188,6 +189,19 @@ function optEach(validator: IClassValidator, isList: boolean): void {
   }
 }
 
+function decorateCustomValidator(field: ParsedField): string {
+  const customValidator = isAnnotatedWith(field, CUSTOM_VALIDATOR, {
+    returnAnnotationParameters: true,
+  });
+  if (customValidator) {
+    const cvs = customValidator.split(',').map((s) => s.trim());
+    if (cvs.length) {
+      return `@${cvs[0]}(${cvs.slice(1, cvs.length - 1).join(', ')})\n`;
+    }
+  }
+  return '';
+}
+
 /**
  * Parse all types of class validators.
  */
@@ -257,6 +271,7 @@ export function decorateClassValidators(field: ParsedField): string {
   field.classValidators.forEach((prop) => {
     output += `@${prop.name}(${prop.value ? prop.value : ''})\n`;
   });
+  output += decorateCustomValidator(field);
 
   return output;
 }

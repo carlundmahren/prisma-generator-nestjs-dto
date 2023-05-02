@@ -65,6 +65,7 @@ model Product {
   /// @DtoUpdateOptional
   note            String      @default("")
   /// @DtoRelationIncludeId
+  /// @CustomValidator(EntityIdExists, 'category', ../../infrastructures/validators/entity-exists.validator)
   categoryId      String      @db.Uuid
   companyId       String      @db.Uuid
 
