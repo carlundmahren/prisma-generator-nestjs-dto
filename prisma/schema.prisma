@@ -33,6 +33,7 @@ model Product {
   /// @Contains('Product')
   /// @description Project's name
   /// @example My first product
+  /// @Matches(/^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i)
   name            String      @db.VarChar(255)
   description     String      @db.VarChar(1024)
   /// @maxItems 5
@@ -43,7 +44,6 @@ model Product {
   /// @minimum 9
   /// @example 12
   /// @DtoApiUpdateHidden
-  /// @DtoApiCreateHidden
   /// @DtoApiPlainHidden
   reviewCount     Boolean?         @default(false)
   type            ProductType
@@ -58,6 +58,7 @@ model Product {
   otherAttributes Json
   /// @DtoCastType(OtherType, other-package, default)
   finalAttributes Json?
+  /// @DtoApiCreateHidden
   score           Float?
   lastOrder       DateTime?
   /// @DtoCreateOptional

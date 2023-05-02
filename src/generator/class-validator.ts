@@ -137,7 +137,11 @@ function extractValidator(
   field: DMMF.Field,
   prop: string,
 ): IClassValidator | null {
-  const regexp = new RegExp(`@${prop}(?:\\(([^)]*)\\))?\s*$`, 'm');
+  // nested parentheses
+  const regexp = new RegExp(
+    `@${prop}(?:\\(([^()]*|(?:[^()]*|\\((?:[^()]*|\\((?:[^()]*|\\((?:[^()]*|\\((?:[^()]*|\\((?:[^()]*|\\([^()]*\\))*\\))*\\))*\\))*\\))*\\))*)\\))?\s*$`,
+    'm',
+  );
   const matches = regexp.exec(field.documentation || '');
 
   if (matches) {
