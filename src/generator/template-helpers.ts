@@ -1,5 +1,5 @@
 import { DMMF } from '@prisma/generator-helper';
-import { ImportStatementParams, ParsedField } from './types';
+import { ImportStatementParams, ParsedField, isApiResp } from './types';
 import { decorateApiProperty } from './api-decorator';
 import { decorateClassValidators } from './class-validator';
 import { isAnnotatedWith, isScalar, isType } from './field-classifiers';
@@ -208,6 +208,7 @@ export const makeHelpers = ({
     forceOptional = false,
   ) => {
     const castType = getRawCastType(field);
+    forceOptional || (forceOptional = isApiResp(field, dtoType));
     return `${decorateApiProperty(
       field,
       castType,
