@@ -3,7 +3,7 @@ import path from 'node:path';
 import {
   DTO_ENTITY_HIDDEN,
   DTO_RELATION_INCLUDE_ID,
-  DTO_API_PLAIN_HIDDEN,
+  DTO_PLAIN_API_RESP,
 } from '../annotations';
 import { isAnnotatedWith, isRelation, isType } from '../field-classifiers';
 import {
@@ -36,6 +36,7 @@ export const computePlainDtoParams = ({
   templateHelpers,
 }: ComputePlainDtoParamsParam): PlainDtoParams => {
   let hasApiProperty = false;
+  let hasApiRespProperty = false;
   const imports: ImportStatementParams[] = [];
   const apiExtraModels: string[] = [];
 
@@ -47,7 +48,7 @@ export const computePlainDtoParams = ({
     const overrides: Partial<DMMF.Field> = {
       isRequired: true,
       isNullable: !field.isRequired,
-      plainApiHide: false,
+      plainApiResp: false,
     };
     const decorators: { apiProperties?: IApiProperty[] } = {};
 
@@ -98,7 +99,8 @@ export const computePlainDtoParams = ({
     }
 
     if (!templateHelpers.config.noDependencies) {
-      overrides.plainApiHide = isAnnotatedWith(field, DTO_API_PLAIN_HIDDEN);
+      overrides.plainApiResp = isAnnotatedWith(field, DTO_PLAIN_API_RESP);
+      hasApiRespProperty = hasApiRespProperty || overrides.plainApiResp;
       decorators.apiProperties = parseApiProperty(
         { ...field, isRequired: false, isNullable: !field.isRequired },
         { default: false },
@@ -114,10 +116,11 @@ export const computePlainDtoParams = ({
     return [...result, mapDMMFToParsedField(field, overrides, decorators)];
   }, [] as ParsedField[]);
 
-  if (apiExtraModels.length || hasApiProperty) {
+  if (apiExtraModels.length || hasApiProperty || hasApiRespProperty) {
     const destruct = [];
     if (apiExtraModels.length) destruct.push('ApiExtraModels');
     if (hasApiProperty) destruct.push('ApiProperty');
+    if (hasApiRespProperty) destruct.push('ApiResponseProperty');
     imports.unshift({ from: '@nestjs/swagger', destruct });
   }
 

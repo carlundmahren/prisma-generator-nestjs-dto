@@ -1,5 +1,5 @@
 import { DMMF } from '@prisma/generator-helper';
-import { IClassValidator, ParsedField } from './types';
+import { IClassValidator, ParsedField, isApiResp } from './types';
 import { isAnnotatedWith, isRelation, isType } from './field-classifiers';
 import { CUSTOM_VALIDATOR } from './annotations';
 
@@ -263,8 +263,11 @@ export function parseClassValidators(
 /**
  * Compose `class-validator` decorators.
  */
-export function decorateClassValidators(field: ParsedField): string {
-  if (!field.classValidators?.length) return '';
+export function decorateClassValidators(
+  field: ParsedField,
+  dtoType: string,
+): string {
+  if (!field.classValidators?.length || isApiResp(field, dtoType)) return '';
 
   let output = '';
 

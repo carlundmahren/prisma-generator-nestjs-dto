@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.17.5] - 2023-04-29
 
-- add annotation `@DtoApiCreateHidden`, `@DtoApiCreateHidden`
+- add annotation `@DtoCreateApiResponse`, `@DtoUpdateApiResponse`, `@DtoPlainApiResponse`
 - add annotation `@DtoCreateHidden`
 - restore annotation `@DtoUpdateHidden`
 - output NestJs pluralized model folders.

@@ -1,5 +1,5 @@
 import { DMMF } from '@prisma/generator-helper';
-import { IApiProperty, ParsedField } from './types';
+import { IApiProperty, ParsedField, isApiResp } from './types';
 
 const ApiProps = [
   'description',
@@ -149,17 +149,30 @@ export function parseApiProperty(
 export function decorateApiProperty(
   field: ParsedField,
   castType: string | undefined,
-  dtoType: 'create' | 'update' | 'plain' | null = null,
+  dtoType: 'create' | 'update' | 'plain' | undefined = undefined,
 ): string {
-  if (dtoType) {
-    type ObjectKey = keyof typeof field;
-    const apiHide = (dtoType + 'ApiHide') as ObjectKey;
-    if (field[apiHide]) return '';
+  castType = castType ? (castType = `type: ${castType},\n`) : '';
+
+  if (isApiResp(field, dtoType)) {
+    let decorator = '';
+    const allowedProps = ['example', 'format', 'enum', 'deprecated'];
+    if (field.apiProperties?.length) {
+      decorator += '@ApiResponseProperty({\n';
+      field.apiProperties.forEach((prop) => {
+        if (allowedProps.indexOf(prop.name) < 0) return;
+        decorator += `  ${prop.name}: ${
+          prop.name === 'enum' || prop.noEncapsulation
+            ? prop.value
+            : encapsulateString(prop.value)
+        },\n`;
+      });
+      decorator += `${castType}})\n`;
+    }
+    return decorator;
   }
 
   let required = `required: ${field.isRequired},\n`;
 
-  castType = castType ? (castType = `type: ${castType},\n`) : '';
   if (
     field.apiProperties?.length === 1 &&
     field.apiProperties[0].name === 'dummy'
@@ -168,7 +181,6 @@ export function decorateApiProperty(
   }
 
   let decorator = '';
-
   if (field.apiProperties?.length) {
     decorator += '@ApiProperty({\n';
     field.apiProperties.forEach((prop) => {

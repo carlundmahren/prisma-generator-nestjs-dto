@@ -96,11 +96,11 @@ model Post {
 - `@DtoReadOnly` - omits field in `CreateDTO` and `UpdateDTO`
 - `@DtoEntityHidden` - omits field in `Entity`
 - `@DtoCreateOptional` - adds field **optionally** to `CreateDTO` - useful for fields that would otherwise be omitted (e.g. `@id`, `@updatedAt`)
-- @DtoCreateHidden - omits field in `CreateDTO`
-- `@DtoApiCreateHidden` - omits field `@ApiProperty()` in `CreateDTO`
 - `@DtoUpdateOptional` - adds field **optionally** to `UpdateDTO` - useful for fields that would otherwise be omitted (e.g. `@id`, `@updatedAt`)
+- @DtoCreateHidden - omits field in `CreateDTO`
 - @DtoUpdateHidden - omits field in `UpdateDTO`
-- `@DtoApiUpdateHidden` - omits field `@ApiProperty()` in `UpdateDTO`
+- `@DtoCreateApiResponse` - generate `@ApiResponseProperty()` and ignore all other annotations in `CreateDTO`
+- same for `DtoUpdateApiResponse` and `DtoPlainApiResponse`
 - `@DtoRelationRequired` - marks relation **required** in `Entity` although it's optional in PrismaSchema - useful when you don't want (SQL) `ON DELETE CASCADE` behavior - but your logical data schema sees this relation as required  
   (**Note**: becomes obsolete once [referentialActions](https://github.com/prisma/prisma/issues/7816) are released and stable)
 - `@DtoRelationCanCreateOnCreate` - adds [create](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#create-a-related-record) option on a relation field in the generated `CreateDTO` - useful when you want to allow to create related model instances

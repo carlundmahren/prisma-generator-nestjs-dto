@@ -3,7 +3,7 @@ import path from 'node:path';
 import {
   DTO_CREATE_OPTIONAL,
   DTO_CREATE_HIDDEN,
-  DTO_API_CREATE_HIDDEN,
+  DTO_CREATE_API_RESP,
   DTO_RELATION_CAN_CONNECT_ON_CREATE,
   DTO_RELATION_CAN_CREATE_ON_CREATE,
   DTO_RELATION_INCLUDE_ID,
@@ -33,7 +33,7 @@ import {
 
 import type { DMMF } from '@prisma/generator-helper';
 import type { TemplateHelpers } from '../template-helpers';
-import type {
+import {
   Model,
   CreateDtoParams,
   ImportStatementParams,
@@ -55,6 +55,7 @@ export const computeCreateDtoParams = ({
   templateHelpers,
 }: ComputeCreateDtoParamsParam): CreateDtoParams => {
   let hasApiProperty = false;
+  let hasApiRespProperty = false;
   const imports: ImportStatementParams[] = [];
   const apiExtraModels: string[] = [];
   const extraClasses: string[] = [];
@@ -66,7 +67,7 @@ export const computeCreateDtoParams = ({
   const fields = model.fields.reduce((result, field) => {
     const { name } = field;
     const overrides: Partial<DMMF.Field> = {
-      createApiHide: false,
+      createApiResp: false,
     };
     const decorators: {
       apiProperties?: IApiProperty[];
@@ -194,7 +195,8 @@ export const computeCreateDtoParams = ({
     }
 
     if (!templateHelpers.config.noDependencies) {
-      overrides.createApiHide = isAnnotatedWith(field, DTO_API_CREATE_HIDDEN);
+      overrides.createApiResp = isAnnotatedWith(field, DTO_CREATE_API_RESP);
+      hasApiRespProperty = hasApiRespProperty || overrides.createApiResp;
       decorators.apiProperties = parseApiProperty(field, {
         type: !overrides.type,
       });
@@ -215,10 +217,11 @@ export const computeCreateDtoParams = ({
     return [...result, mapDMMFToParsedField(field, overrides, decorators)];
   }, [] as ParsedField[]);
 
-  if (apiExtraModels.length || hasApiProperty) {
+  if (apiExtraModels.length || hasApiProperty || hasApiRespProperty) {
     const destruct = [];
     if (apiExtraModels.length) destruct.push('ApiExtraModels');
     if (hasApiProperty) destruct.push('ApiProperty');
+    if (hasApiRespProperty) destruct.push('ApiResponseProperty');
     imports.unshift({ from: '@nestjs/swagger', destruct });
   }
 

@@ -69,8 +69,8 @@ export const makeImportsFromPrismaClient = (
         ]
       : [];
 
-  // Walk the fields for any that have a DTOCastType annotation that
-  // requires a custom import to be appended.
+  // Walk the fields for any that have a DTOCastType/CustomValidator
+  // annotation that requires a custom import to be appended.
   const customImports = fields.flatMap(({ documentation }) => {
     const ret = [];
     const customValidator = isAnnotatedWith(

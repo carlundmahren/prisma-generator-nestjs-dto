@@ -212,7 +212,7 @@ export const makeHelpers = ({
       field,
       castType,
       dtoType,
-    )}${decorateClassValidators(field)}${field.name}${unless(
+    )}${decorateClassValidators(field, dtoType)}${field.name}${unless(
       field.isRequired && !forceOptional,
       '?',
       when(definiteAssignmentAssertion, '!'),
