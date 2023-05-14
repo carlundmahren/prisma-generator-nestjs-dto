@@ -95,7 +95,7 @@ const validatorsWithParams = new Map<string, string>([
   ['Length', '0, 10'],
   ['MinLength', '0'],
   ['MaxLength', '10'],
-  ['Matches', "'', ''"],
+  ['Matches', ''],
   ['IsHash', "'md4'"],
   ['IsISSN', '{}'],
   ['IsInstance', "''"],

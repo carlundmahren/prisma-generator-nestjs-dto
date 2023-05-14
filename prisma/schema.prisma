@@ -48,6 +48,7 @@ model Product {
   type            ProductType
   /// @ArrayNotEmpty
   /// @MinLength(3)
+  /// @Matches(/^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){1,14}$/i)
   tags            String[]
   /// @DtoCastType(MyType, my-package)
   attributes      Json?

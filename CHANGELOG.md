@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - support nested parentheses for validators, e.g.: @Matches(/^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i)
 - add annotation `@CustomValidator`
 - always set `@ApiProperty`.required
+- fix array: @Matches(/xxx/'', { each: true })
+
 
 ## [1.17.4] - 2023-03-04
 
