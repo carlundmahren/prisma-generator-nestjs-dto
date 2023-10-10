@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - add annotation `@DtoRelationCanUpdateOnUpdate`
 - ability to force id to be required in ConnectDtos when multiple options are available
+- modified `@CustomValidator` so it can have an arrow as a parameter, useful for providing a value for `@Type`, for example: `@Type(() => Date)`
 
 ## [1.17.5] - 2023-04-29
 
