@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.17.6] - 2023-10-10
+
+- add annotation `@DtoRelationCanUpdateOnUpdate`
+- ability to force id to be required in ConnectDtos when multiple options are available
+
 ## [1.17.5] - 2023-04-29
 
 - add annotation `@DtoCreateApiResponse`, `@DtoUpdateApiResponse`, `@DtoPlainApiResponse`
@@ -12,11 +17,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - restore annotation `@DtoUpdateHidden`
 - output NestJs pluralized model folders.
 - add `@ApiProperty`.type for `@DtoCastType'
-- support nested parentheses for validators, e.g.: @Matches(/^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i)
+- support nested parentheses for validators, e.g.: @Matches(/^[a-z\d](<?:[a-z\d]|-(?=[a-z\d])>){0,38}$/i)
 - add annotation `@CustomValidator`
 - always set `@ApiProperty`.required
 - fix array: @Matches(/xxx/'', { each: true })
-
 
 ## [1.17.4] - 2023-03-04
 
