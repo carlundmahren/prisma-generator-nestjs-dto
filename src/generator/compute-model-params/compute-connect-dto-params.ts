@@ -1,4 +1,6 @@
 import type { DMMF } from '@prisma/generator-helper';
+import { parseApiProperty } from '../api-decorator';
+import { parseClassValidators } from '../class-validator';
 import { isId, isUnique } from '../field-classifiers';
 import {
   concatIntoArray,
@@ -9,11 +11,9 @@ import {
   uniq,
   zipImportStatementParams,
 } from '../helpers';
+import { TemplateHelpers } from '../template-helpers';
 import type { ConnectDtoParams, Model } from '../types';
 import { IApiProperty, IClassValidator, ImportStatementParams } from '../types';
-import { parseClassValidators } from '../class-validator';
-import { TemplateHelpers } from '../template-helpers';
-import { parseApiProperty } from '../api-decorator';
 
 interface ComputeConnectDtoParamsParam {
   model: Model;
@@ -132,6 +132,10 @@ export const computeConnectDtoParams = ({
       else if (field.type === 'Decimal') field.type = 'Float';
     }
 
+    if (field.name === 'id') {
+      overrides.isRequired = true;
+    }
+
     return mapDMMFToParsedField(field, overrides, decorators);
   });
 
@@ -162,6 +166,8 @@ export const computeConnectDtoParams = ({
     fields,
     templateHelpers.config.prismaClientImportPath,
   );
+
+  console.log(fields);
 
   return {
     model,
