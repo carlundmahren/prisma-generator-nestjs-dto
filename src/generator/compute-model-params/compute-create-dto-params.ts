@@ -1,11 +1,12 @@
-import slash from 'slash';
 import path from 'node:path';
+import slash from 'slash';
 import {
-  DTO_CREATE_OPTIONAL,
-  DTO_CREATE_HIDDEN,
   DTO_CREATE_API_RESP,
+  DTO_CREATE_HIDDEN,
+  DTO_CREATE_OPTIONAL,
   DTO_RELATION_CAN_CONNECT_ON_CREATE,
   DTO_RELATION_CAN_CREATE_ON_CREATE,
+  DTO_RELATION_CAN_UPDATE_ON_UPDATE,
   DTO_RELATION_INCLUDE_ID,
   DTO_RELATION_MODIFIERS_ON_CREATE,
   DTO_RELATION_REQUIRED,
@@ -32,17 +33,17 @@ import {
 } from '../helpers';
 
 import type { DMMF } from '@prisma/generator-helper';
-import type { TemplateHelpers } from '../template-helpers';
-import {
-  Model,
-  CreateDtoParams,
-  ImportStatementParams,
-  ParsedField,
-  IClassValidator,
-} from '../types';
 import { parseApiProperty } from '../api-decorator';
 import { parseClassValidators } from '../class-validator';
-import { IApiProperty } from '../types';
+import type { TemplateHelpers } from '../template-helpers';
+import {
+  CreateDtoParams,
+  IApiProperty,
+  IClassValidator,
+  ImportStatementParams,
+  Model,
+  ParsedField,
+} from '../types';
 
 interface ComputeCreateDtoParamsParam {
   model: Model;
@@ -94,6 +95,7 @@ export const computeCreateDtoParams = ({
         preAndSuffixClassName: templateHelpers.createDtoName,
         canCreateAnnotation: DTO_RELATION_CAN_CREATE_ON_CREATE,
         canConnectAnnotation: DTO_RELATION_CAN_CONNECT_ON_CREATE,
+        canUpdateAnnotation: DTO_RELATION_CAN_UPDATE_ON_UPDATE,
       });
 
       const isDtoRelationRequired = isAnnotatedWith(

@@ -18,10 +18,12 @@ import { IApiProperty, IClassValidator, ImportStatementParams } from '../types';
 interface ComputeConnectDtoParamsParam {
   model: Model;
   templateHelpers: TemplateHelpers;
+  forceIdOnConnect?: boolean;
 }
 export const computeConnectDtoParams = ({
   model,
   templateHelpers,
+  forceIdOnConnect = false,
 }: ComputeConnectDtoParamsParam): ConnectDtoParams => {
   let hasApiProperty = false;
   const imports: ImportStatementParams[] = [];
@@ -63,7 +65,7 @@ export const computeConnectDtoParams = ({
   // TODO consider adding documentation block to model that one of the properties must be provided
   const uniqueFields = uniq([...idFields, ...isUniqueFields]);
   const overrides =
-    uniqueFields.length + uniqueCompounds.length > 1
+    uniqueFields.length + uniqueCompounds.length > 1 && !forceIdOnConnect
       ? { isRequired: false }
       : {};
 
@@ -132,8 +134,10 @@ export const computeConnectDtoParams = ({
       else if (field.type === 'Decimal') field.type = 'Float';
     }
 
-    if (field.name === 'id') {
-      overrides.isRequired = true;
+    if (forceIdOnConnect && field.name === 'id') {
+      field.isRequired = true;
+    } else {
+      field.isRequired = false;
     }
 
     return mapDMMFToParsedField(field, overrides, decorators);
@@ -166,8 +170,6 @@ export const computeConnectDtoParams = ({
     fields,
     templateHelpers.config.prismaClientImportPath,
   );
-
-  console.log(fields);
 
   return {
     model,

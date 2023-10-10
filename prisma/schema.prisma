@@ -25,6 +25,7 @@ generator nestjsDto {
   outputType                      = "class"
   definiteAssignmentAssertion     = "true"
   prettier                        = "true"
+  forceIdOnConnect                = "true"
 }
 
 model Product {
@@ -44,7 +45,7 @@ model Product {
   /// @example 12
   /// @DtoCreateApiResponse
   /// @DtoPlainApiResponse
-  reviewCount     Boolean?         @default(false)
+  reviewCount     Boolean?    @default(false)
   type            ProductType
   /// @ArrayNotEmpty
   /// @MinLength(3)
@@ -96,7 +97,7 @@ model Product {
 
   bikeId String?
   /// @DtoRelationCanConnectOnCreate
-  bike Bike? @relation(fields: [bikeId], references: [id])
+  bike   Bike?   @relation(fields: [bikeId], references: [id])
 
   @@map("products")
 }
@@ -134,8 +135,8 @@ model User {
 }
 
 model Role {
-  id   String @id
-  name Json
+  id        String @id
+  name      Json
   attribute String
 
   companyUserRoles CompanyUserRole[]
@@ -155,13 +156,13 @@ model CompanyUserRole {
 }
 
 model Bike {
-  id String @id @default(uuid())
+  id             String    @id @default(uuid())
   chassis_number String
-  model String
-  vendor String
-  year_from Int
-  year_to Int
-  products Product[]
+  model          String
+  vendor         String
+  year_from      Int
+  year_to        Int
+  products       Product[]
 
   @@unique([vendor, chassis_number], map: "My_Bike_Unique")
 }
