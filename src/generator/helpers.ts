@@ -376,8 +376,10 @@ export const generateRelationInput = ({
   }
 
   if (updateRelation) {
-    const preAndPostfixedName = t.updateDtoName(field.type);
-    apiExtraModels.push(preAndPostfixedName);
+    const updateDtoName = t.updateDtoName(field.type);
+    apiExtraModels.push(updateDtoName);
+    const createDtoName = t.createDtoName(field.type);
+    apiExtraModels.push(createDtoName);
 
     const modelToImportFrom = allModels.find(({ name }) => name === field.type);
 
@@ -392,7 +394,15 @@ export const generateRelationInput = ({
           path.sep
         }${t.updateDtoFilename(field.type)}`,
       ),
-      destruct: [preAndPostfixedName],
+      destruct: [updateDtoName],
+    });
+    imports.push({
+      from: slash(
+        `${getRelativePath(model.output.dto, modelToImportFrom.output.dto)}${
+          path.sep
+        }${t.createDtoFilename(field.type)}`,
+      ),
+      destruct: [createDtoName],
     });
 
     const decorators: {
@@ -403,8 +413,21 @@ export const generateRelationInput = ({
     if (t.config.classValidation) {
       decorators.classValidators = parseClassValidators(
         { ...field, isRequired },
-        preAndPostfixedName,
+        'Object',
       );
+      decorators.classValidators.push({
+        name: 'Transform',
+        value: `({ value, obj }) => {
+					return plainToInstance(
+						obj.id === undefined ? ${createDtoName} : ${updateDtoName},
+						value,
+					);
+				},
+				{
+					toClassOnly: true,
+				}`,
+      });
+
       concatUniqueIntoArray(
         decorators.classValidators,
         classValidators,
@@ -416,14 +439,14 @@ export const generateRelationInput = ({
       decorators.apiProperties = parseApiProperty({ ...field, isRequired });
       decorators.apiProperties.push({
         name: 'type',
-        value: preAndPostfixedName,
+        value: 'Object',
         noEncapsulation: true,
       });
     }
 
     relationInputClassProps.push({
       name: 'update',
-      type: preAndPostfixedName,
+      type: `(${updateDtoName} | ${createDtoName})`,
       apiProperties: decorators.apiProperties,
       classValidators: decorators.classValidators,
     });

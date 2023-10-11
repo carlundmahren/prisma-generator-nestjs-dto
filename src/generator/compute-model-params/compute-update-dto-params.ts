@@ -239,10 +239,16 @@ export const computeUpdateDtoParams = ({
         destruct: ['Type'],
       });
     }
+    if (classValidators.find((cv) => cv.name === 'Transform')) {
+      imports.unshift({
+        from: 'class-transformer',
+        destruct: ['Transform', 'plainToInstance'],
+      });
+    }
     imports.unshift({
       from: 'class-validator',
       destruct: classValidators
-        .filter((cv) => cv.name !== 'Type')
+        .filter((cv) => cv.name !== 'Type' && cv.name !== 'Transform')
         .map((v) => v.name)
         .sort(),
     });
