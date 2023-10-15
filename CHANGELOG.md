@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.17.7] - 2023-10-10
+## [1.17.9] - 2023-10-15
+
+- remove comments in dtos and entities
+
+## [1.17.8] - 2023-10-15
 
 - fix annotation `@DtoRelationRequired` to set undefined correctly in entity
 
