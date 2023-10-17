@@ -16,7 +16,7 @@ import {
 } from '../helpers';
 
 import type { DMMF } from '@prisma/generator-helper';
-import { parseApiProperty } from '../api-decorator';
+import { PrismaScalarToFormat, parseApiProperty } from '../api-decorator';
 import type { TemplateHelpers } from '../template-helpers';
 import type {
   EntityParams,
@@ -158,21 +158,23 @@ export const computeEntityParams = ({
     }
 
     if (!templateHelpers.config.noDependencies) {
-      decorators.apiProperties = [
-        ...parseApiProperty(
-          {
-            ...field,
-            isRequired: field.isRequired,
-            isNullable: !field.isRequired,
-          },
-          { default: false },
-        ),
+      decorators.apiProperties = parseApiProperty(
         {
+          ...field,
+          isRequired: field.isRequired,
+          isNullable: !field.isRequired,
+        },
+        { default: false },
+      );
+
+      const scalarFormat = PrismaScalarToFormat[field.type];
+      if (!scalarFormat) {
+        decorators.apiProperties.push({
           name: 'type',
           value: field.type,
           noEncapsulation: true,
-        },
-      ];
+        });
+      }
       if (decorators.apiProperties.length) hasApiProperty = true;
     }
 
