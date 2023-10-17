@@ -114,6 +114,12 @@ export function parseApiProperty(
     }
     if (field.isList) {
       properties.push({ name: 'isArray', value: 'true' });
+      properties.push({
+        name: 'type',
+        // TODO: add entity suffix/prefix to type
+        value: field.type,
+        noEncapsulation: true,
+      });
     }
   }
 
