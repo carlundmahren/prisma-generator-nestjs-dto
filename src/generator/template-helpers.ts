@@ -237,7 +237,6 @@ export const makeHelpers = ({
 
   const fieldToEntityProp = (field: ParsedField) => {
     const castType = getRawCastType(field);
-
     return `${decorateApiProperty(field, castType)}${field.name}${unless(
       field.isRequired,
       '?',
