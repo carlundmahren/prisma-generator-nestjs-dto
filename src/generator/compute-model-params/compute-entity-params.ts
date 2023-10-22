@@ -168,10 +168,10 @@ export const computeEntityParams = ({
       );
 
       const scalarFormat = PrismaScalarToFormat[field.type];
-      if (!scalarFormat) {
+      if (!scalarFormat && field.type !== 'String') {
         decorators.apiProperties.push({
           name: 'type',
-          value: field.type,
+          value: `() => ${field.type}`,
           noEncapsulation: true,
         });
       }
