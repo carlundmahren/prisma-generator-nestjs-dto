@@ -171,7 +171,7 @@ export const computeEntityParams = ({
       if (!scalarFormat) {
         decorators.apiProperties.push({
           name: 'type',
-          value: `() => ${field.type}`,
+          value: field.type === 'String' ? field.type : `() => ${field.type}`,
           noEncapsulation: true,
         });
       }
