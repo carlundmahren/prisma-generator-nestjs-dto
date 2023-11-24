@@ -171,9 +171,23 @@ export const computeEntityParams = ({
       if (!scalarFormat) {
         decorators.apiProperties.push({
           name: 'type',
-          value: field.type === 'String' ? field.type : `() => ${field.type}`,
+          value: ['String', 'Json', 'Boolean'].includes(field.type)
+            ? field.type
+            : `() => ${field.type}`,
           noEncapsulation: true,
         });
+
+        if (
+          !['String', 'Json', 'Boolean'].includes(field.type) &&
+          field.kind !== 'enum'
+        ) {
+          decorators.apiProperties.push({
+            name: 'type_decorator',
+            value: field.type,
+            noEncapsulation: true,
+          });
+          imports.unshift({ from: 'class-transformer', destruct: ['Type'] });
+        }
       }
       if (decorators.apiProperties.length) hasApiProperty = true;
     }
@@ -197,6 +211,11 @@ export const computeEntityParams = ({
     fields,
     templateHelpers.config.prismaClientImportPath,
   );
+
+  imports.unshift({
+    from: 'class-transformer',
+    destruct: ['Expose'],
+  });
 
   return {
     model,

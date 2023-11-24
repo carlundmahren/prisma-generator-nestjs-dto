@@ -187,7 +187,7 @@ export function decorateApiProperty(
   if (field.apiProperties?.length) {
     decorator += '@ApiProperty({\n';
     field.apiProperties.forEach((prop) => {
-      if (prop.name === 'dummy') return;
+      if (prop.name === 'dummy' || prop.name === 'type_decorator') return;
       if (prop.name === 'required') required = '';
       decorator += `  ${prop.name}: ${
         prop.name === 'enum' || prop.noEncapsulation
@@ -196,6 +196,13 @@ export function decorateApiProperty(
       },\n`;
     });
     decorator += `${castType}${required}})\n`;
+  }
+
+  const typeDecorator = field.apiProperties?.find(
+    (prop) => prop.name === 'type_decorator',
+  );
+  if (typeDecorator) {
+    decorator += `@Type(() => ${typeDecorator.value})\n`;
   }
 
   return decorator;
