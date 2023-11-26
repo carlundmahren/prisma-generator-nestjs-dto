@@ -187,6 +187,17 @@ export const makeHelpers = ({
       isType(field as DMMF.Field) &&
       isAnnotatedWith(field as DMMF.Field, DTO_TYPE_FULL_UPDATE);
 
+    if (field.documentation?.includes('%')) {
+      const type = field.documentation
+        .split('\n')
+        .filter((item) => item.includes('%'))[0]
+        .replace(/%/g, '');
+
+      if (type) {
+        return type;
+      }
+    }
+
     return `${
       castType ||
       (field.kind === 'scalar'

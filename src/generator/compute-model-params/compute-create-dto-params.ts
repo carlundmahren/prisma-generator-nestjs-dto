@@ -98,30 +98,42 @@ export const computeCreateDtoParams = ({
         canUpdateAnnotation: DTO_RELATION_CAN_UPDATE_ON_UPDATE,
       });
 
-      const isDtoRelationRequired = isAnnotatedWith(
-        field,
-        DTO_RELATION_REQUIRED,
-      );
-      if (isDtoRelationRequired) overrides.isRequired = true;
+      if (relationInputType.imports.length > 1) {
+        // Create and Connect
+        const isDtoRelationRequired = isAnnotatedWith(
+          field,
+          DTO_RELATION_REQUIRED,
+        );
+        if (isDtoRelationRequired) overrides.isRequired = true;
 
-      // list fields can not be required
-      // TODO maybe throw an error if `isDtoRelationRequired` and `isList`
-      if (field.isList) overrides.isRequired = false;
+        // list fields can not be required
+        // TODO maybe throw an error if `isDtoRelationRequired` and `isList`
+        if (field.isList) overrides.isRequired = false;
 
-      overrides.type = relationInputType.type;
-      // since relation input field types are translated to something like { connect: Foo[] }, the field type itself is not a list anymore.
-      // You provide list input in the nested `connect` or `create` properties.
-      overrides.isList = false;
+        overrides.type = relationInputType.type;
+        // since relation input field types are translated to something like { connect: Foo[] }, the field type itself is not a list anymore.
+        // You provide list input in the nested `connect` or `create` properties.
+        overrides.isList = false;
 
-      concatIntoArray(relationInputType.imports, imports);
-      concatIntoArray(relationInputType.generatedClasses, extraClasses);
-      if (!templateHelpers.config.noDependencies)
-        concatIntoArray(relationInputType.apiExtraModels, apiExtraModels);
-      concatUniqueIntoArray(
-        relationInputType.classValidators,
-        classValidators,
-        'name',
-      );
+        concatIntoArray(relationInputType.imports, imports);
+        concatIntoArray(relationInputType.generatedClasses, extraClasses);
+        if (!templateHelpers.config.noDependencies)
+          concatIntoArray(relationInputType.apiExtraModels, apiExtraModels);
+        concatUniqueIntoArray(
+          relationInputType.classValidators,
+          classValidators,
+          'name',
+        );
+      } else {
+        const type = relationInputType.classValidators.find(
+          (cv) => cv.name === 'Type',
+        );
+        if (type && type.value) {
+          field.documentation += `\n%${type.value.replace('() => ', '')}%`;
+        }
+
+        concatIntoArray(relationInputType.imports, imports);
+      }
     }
 
     if (
