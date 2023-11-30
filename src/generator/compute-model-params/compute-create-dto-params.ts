@@ -113,7 +113,6 @@ export const computeCreateDtoParams = ({
         overrides.type = relationInputType.type;
         // since relation input field types are translated to something like { connect: Foo[] }, the field type itself is not a list anymore.
         // You provide list input in the nested `connect` or `create` properties.
-        overrides.isList = false;
 
         concatIntoArray(relationInputType.imports, imports);
         concatIntoArray(relationInputType.generatedClasses, extraClasses);
@@ -216,6 +215,12 @@ export const computeCreateDtoParams = ({
       decorators.apiProperties = parseApiProperty(field, {
         type: !overrides.type,
       });
+      if (field.isList) {
+        decorators.apiProperties.push({
+          name: 'isArray',
+          value: 'true',
+        });
+      }
       if (overrides.type)
         decorators.apiProperties.push({
           name: 'type',
