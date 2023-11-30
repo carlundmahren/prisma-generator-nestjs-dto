@@ -215,7 +215,10 @@ export const computeCreateDtoParams = ({
       decorators.apiProperties = parseApiProperty(field, {
         type: !overrides.type,
       });
-      if (field.isList) {
+      if (
+        field.isList &&
+        !decorators.apiProperties.find((p) => p.name === 'isArray')
+      ) {
         decorators.apiProperties.push({
           name: 'isArray',
           value: 'true',
