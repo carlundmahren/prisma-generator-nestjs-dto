@@ -187,14 +187,14 @@ export const makeHelpers = ({
       isType(field as DMMF.Field) &&
       isAnnotatedWith(field as DMMF.Field, DTO_TYPE_FULL_UPDATE);
 
-    if (field.documentation?.includes('%')) {
+    if (field.documentation?.includes('%') && dtoType === 'create') {
       const type = field.documentation
         .split('\n')
         .filter((item) => item.includes('%'))[0]
         .replace(/%/g, '');
 
       if (type) {
-        return type;
+        return field.isList ? `${type}[]` : type;
       }
     }
 

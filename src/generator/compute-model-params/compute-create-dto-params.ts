@@ -129,6 +129,8 @@ export const computeCreateDtoParams = ({
           (cv) => cv.name === 'Type',
         );
         if (type && type.value) {
+          overrides.type = type.value;
+
           field.documentation += `\n%${type.value.replace('() => ', '')}%`;
         }
 
@@ -199,7 +201,7 @@ export const computeCreateDtoParams = ({
           ...field,
           ...overrides,
         },
-        overrides.type || templateHelpers.createDtoName,
+        overrides.type?.replace('() =>', '') || templateHelpers.createDtoName,
       );
       concatUniqueIntoArray(
         decorators.classValidators,
