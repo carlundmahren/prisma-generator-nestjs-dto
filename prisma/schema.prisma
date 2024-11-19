@@ -57,8 +57,10 @@ model Product {
   someAttributes  Json
   /// @DtoCastType(OtherType, other-package, default)
   otherAttributes Json
-  /// @DtoCastType(OtherType, other-package, default)
+  /// @DtoCastType(OtherType<SomeType>, other-package, default)
   finalAttributes Json?
+  /// @DtoCastType(MyGenericType<any>, other-package,GenericType)
+  finalAttributes2 Json?
   /// @DtoCreateApiResponse
   score           Float?
   lastOrder       DateTime?
@@ -102,6 +104,7 @@ model Product {
   @@map("products")
 }
 
+/// @DtoSingularModel generate singular output folder name
 model Category {
   id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
