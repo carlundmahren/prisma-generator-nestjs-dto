@@ -95,7 +95,7 @@ export const makeImportsFromPrismaClient = (
       return ret;
     }
 
-    const [importAs, importFrom, importWas] = castType
+    let [importAs, importFrom, importWas] = castType
       .split(',')
       .map((s) => s.trim());
 
@@ -105,6 +105,9 @@ export const makeImportsFromPrismaClient = (
       );
     }
 
+    // generic types
+    importAs.includes('<') && (importAs = importAs.split('<')[0]);
+    importWas?.includes('<') && (importWas = importWas.split('<')[0]);
     if (!importWas || importWas === importAs) {
       ret.push({
         from: importFrom,

@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.17.10] - 2024-11-19
+
+- add annotation `@DtoSingularModel` on model to output singular model folders
+- modify `@DtoCastType` to support generic types, e.g. @DtoCastType(MyGenericType\<any>, other-package, GenericType)
+
 ## [1.17.9] - 2023-10-15
 
 - remove comments in dtos and entities

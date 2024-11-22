@@ -154,7 +154,8 @@ export function decorateApiProperty(
   castType: string | undefined,
   dtoType: 'create' | 'update' | 'plain' | undefined = undefined,
 ): string {
-  castType = castType ? (castType = `type: ${castType},\n`) : '';
+  const castType0 = castType;
+  castType = castType ? `type: ${castType},\n` : '';
 
   if (isApiResp(field, dtoType)) {
     let decorator = '';
@@ -185,6 +186,11 @@ export function decorateApiProperty(
 
   let decorator = '';
   if (field.apiProperties?.length) {
+    if (castType) {
+      field.apiProperties = field.apiProperties.filter((p) => p.name != 'type');
+      const td = field.apiProperties.find((p) => p.name === 'type_decorator');
+      castType0 && td && (td.value = castType0);
+    }
     decorator += '@ApiProperty({\n';
     field.apiProperties.forEach((prop) => {
       if (prop.name === 'dummy' || prop.name === 'type_decorator') return;

@@ -3,7 +3,7 @@ import { camel, kebab, pascal, snake } from 'case';
 import path from 'node:path';
 import pluralize from 'pluralize-esm';
 import { logger } from '../utils';
-import { DTO_IGNORE_MODEL } from './annotations';
+import { DTO_IGNORE_MODEL, DTO_SINGULAR_MODEL } from './annotations';
 import { computeModelParams } from './compute-model-params';
 import { computeTypeParams } from './compute-type-params';
 import { isAnnotatedWith } from './field-classifiers';
@@ -63,8 +63,10 @@ export const run = ({
   };
 
   const transformFileNameCase = transformers[fileNamingStyle];
-  const transformFileNameCases = (str: string) =>
-    pluralize(transformFileNameCase(str));
+  const transformFileNameCases = (model: DMMF.Model) => {
+    const singular = isAnnotatedWith(model, DTO_SINGULAR_MODEL);
+    return pluralize(transformFileNameCase(model.name), singular ? 1 : 2);
+  };
 
   const templateHelpers = makeHelpers({
     transformFileNameCase,
@@ -85,8 +87,8 @@ export const run = ({
       output: {
         dto: outputToNestJsResourceStructure
           ? flatResourceStructure
-            ? path.join(output, transformFileNameCases(model.name))
-            : path.join(output, transformFileNameCases(model.name), 'dto')
+            ? path.join(output, transformFileNameCases(model))
+            : path.join(output, transformFileNameCases(model), 'dto')
           : output,
         entity: '',
       },
@@ -102,13 +104,13 @@ export const run = ({
       output: {
         dto: outputToNestJsResourceStructure
           ? flatResourceStructure
-            ? path.join(output, transformFileNameCases(model.name))
-            : path.join(output, transformFileNameCases(model.name), 'dto')
+            ? path.join(output, transformFileNameCases(model))
+            : path.join(output, transformFileNameCases(model), 'dto')
           : output,
         entity: outputToNestJsResourceStructure
           ? flatResourceStructure
-            ? path.join(output, transformFileNameCases(model.name))
-            : path.join(output, transformFileNameCases(model.name), 'entities')
+            ? path.join(output, transformFileNameCases(model))
+            : path.join(output, transformFileNameCases(model), 'entities')
           : output,
       },
     }));

@@ -168,10 +168,10 @@ export const computeEntityParams = ({
       );
 
       const scalarFormat = PrismaScalarToFormat[field.type];
-      if (!scalarFormat) {
+      if (!scalarFormat && field.type != 'Json') {
         decorators.apiProperties.push({
           name: 'type',
-          value: ['String', 'Json', 'Boolean'].includes(field.type)
+          value: ['String', 'Boolean'].includes(field.type)
             ? field.type
             : `() => ${field.type}`,
           noEncapsulation: true,
